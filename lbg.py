@@ -201,7 +201,6 @@ def delete_one(_id):
     # otherwise 200 - OK
     return "OK", status.HTTP_200_OK
 
-print("It's my birthday today")
 
 # module import protection
 if __name__ == '__main__':
