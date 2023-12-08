@@ -10,7 +10,7 @@ cleanup() {
     echo "Cleaning up previous build artifacts..."
     sleep 3
 
-    ssh -i ~/.ssh/id_rsa jenkins@10.154.0.3
+    ssh -i '~/.ssh/id_rsa jenkins@10.154.0.3 << EOF'
 
     # Add commands to clean up previous build artifacts
     docker stop flask-app || echo "flask-app is not running"
@@ -45,7 +45,7 @@ modify_app() {
 run_docker() {
     echo "Running Docker container..."
     sleep 3
-    ssh -i ~/.ssh/id_rsa jenkins@10.154.0.3
+    ssh -i '~/.ssh/id_rsa jenkins@10.154.0.3 << EOF'
     docker run -d -p 80:$PORT -e PORT=$PORT --name flask-app faizashahid/$DOCKER_IMAGE
 }
 
