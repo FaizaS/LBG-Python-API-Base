@@ -1,8 +1,6 @@
 pipeline {
     agent any
     stages {
-    DOCKER_IMAGE="lbg_python_api"
-    PORT=5001
         stage('Init') {
             steps {
                 sh '''
@@ -27,7 +25,7 @@ pipeline {
             steps {
                 sh '''
                 ssh -i ~/.ssh/id_rsa jenkins@10.154.0.3 << EOF
-                docker run -d -p 80:$PORT -e PORT=$PORT --name flask-app faizashahid/$DOCKER_IMAGE
+                docker run -d -p 80:5001 -e PORT=5001 --name flask-app faizashahid/lbg_python_api
                 '''
            }
         }
