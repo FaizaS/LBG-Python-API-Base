@@ -24,7 +24,7 @@ pipeline {
         stage('Push') {
             steps {
                 sh '''
-                docker push faizashahid/lbg_python_api
+                docker push faizashahid/lbg_python_api:latest
                 docker push faizashahid/lbg_python_api:v${BUILD_NUMBER}
                 '''
            }
