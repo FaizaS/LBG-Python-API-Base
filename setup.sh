@@ -22,7 +22,7 @@ build_docker() {
     echo "Building the Docker image..."
     sleep 3
     docker build -t faizashahid/$DOCKER_IMAGE1:latest -t faizashahid/$DOCKER_IMAGE1:v${BUILD_NUMBER} .
-    docker build -t faizashahid/nginx:latest -t faizashahid/$DOCKER_IMAGE2:v${BUILD_NUMBER} ./nginx
+    docker build -t faizashahid/nginx:latest -t faizashahid/nginx:v${BUILD_NUMBER} ./nginx
 }
 
 #push_docker () {
