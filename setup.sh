@@ -24,12 +24,12 @@ build_docker() {
     docker build -t faizashahid/$DOCKER_IMAGE -t faizashahid/$DOCKER_IMAGE:v${BUILD_NUMBER} .
 }
 
-push_docker () {
-    echo "Pushing the docker image..."
-    sleep 3
-    docker push faizashahid/$DOCKER_IMAGE
-    docker push faizashahid/$DOCKER_IMAGE:v${BUILD_NUMBER}
-}
+#push_docker () {
+#     echo "Pushing the docker image..."
+#     sleep 3
+#     docker push faizashahid/$DOCKER_IMAGE
+#     docker push faizashahid/$DOCKER_IMAGE:v${BUILD_NUMBER}
+# }
 
 # Function to modify the application
 modify_app() {
@@ -53,7 +53,7 @@ sleep 3
 #cleanup
 build_docker
 modify_app
-push_docker
+#push_docker
 build_docker
 #run_docker
 
