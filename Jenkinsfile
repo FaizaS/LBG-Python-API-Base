@@ -1,19 +1,12 @@
 pipeline {
     agent any
     stages {
-        stage('Build') {
+        stage('Build step') {
             steps {
                 sh '''
-                
+                setup.sh
                 '''
            }
-        }
-        stage('Deploy') {
-            steps {
-                sh '''
-                
-                '''
-            }
         }
     }
 }
