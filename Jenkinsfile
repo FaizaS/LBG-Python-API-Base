@@ -4,7 +4,7 @@ pipeline {
         stage('Build step') {
             steps {
                 sh '''
-                setup.sh
+                sh setup.sh
                 '''
            }
         }
