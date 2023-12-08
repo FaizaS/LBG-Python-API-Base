@@ -9,6 +9,7 @@ pipeline {
                 docker stop flask-app || echo "flask-app is not running"
                 docker rm -f $(docker ps -aq) || true
                 docker rmi -f $(docker images) || true
+                docker network create project-network || true
                 echo "Cleanup done."
                 '''
            }
@@ -26,6 +27,8 @@ pipeline {
                 sh '''
                 docker push faizashahid/lbg_python_api:latest
                 docker push faizashahid/lbg_python_api:v${BUILD_NUMBER}
+                docker push faizashahid/lbg_nginx:latest
+                docker push faizashahid/lbg_nginx:v${BUILD_NUMBER}
                 '''
            }
         }
@@ -34,7 +37,8 @@ pipeline {
             steps {
                 sh '''
                 ssh -i ~/.ssh/id_rsa jenkins@10.154.0.36 << EOF
-                docker run -d -p 80:5001 -e PORT=5001 --name flask-app faizashahid/lbg_python_api
+                docker run -d -p 80:5001 -e PORT=5001 --name flask-app faizashahid/lbg_python_api:latest
+                docker run -d -p 80:80 --name lbg_nginx --network project-network faizashahid/lbg_nginx:latest
                 '''
            }
         }
