@@ -47,9 +47,9 @@ pipeline {
             steps {
                 sh '''
                 ssh -i ~/.ssh/id_rsa jenkins@10.154.0.36 << EOF
-                // docker run -d -p 80:5001 -e PORT=5001 --name flask-app faizashahid/lbg_python_api:latest
+                docker run -d -p 80:5001 -e PORT=5001 --name flask-app faizashahid/lbg_python_api
 
-                docker run -d --name flask-app --network project-network faizashahid/lbg_python_api
+                // docker run -d --name flask-app --network project-network faizashahid/lbg_python_api
                 docker run -d -p 80:80 --name nginx --network project-network faizashahid/my-nginx
                 '''
            }

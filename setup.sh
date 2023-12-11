@@ -33,12 +33,12 @@ build_docker() {
 # }
 
 # Function to modify the application
-# modify_app() {
-#     echo "Modifying the application..."
-#     sleep 3
-#     export PORT=5001
-#     echo "Modifications done. Port is now set to $PORT"
-# }
+modify_app() {
+    echo "Modifying the application..."
+    sleep 3
+    export PORT=5001
+    echo "Modifications done. Port is now set to $PORT"
+}
 
 # Function to run the Docker container
 # run_docker() {
@@ -53,7 +53,7 @@ echo "Starting build process..."
 sleep 3
 #cleanup
 build_docker
-#modify_app
+modify_app
 #push_docker
 build_docker
 #run_docker
