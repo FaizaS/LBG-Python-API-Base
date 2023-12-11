@@ -40,7 +40,6 @@ pipeline {
                 script {
 			        if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        // sh setup.sh
                         echo "Build not required in main"
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
