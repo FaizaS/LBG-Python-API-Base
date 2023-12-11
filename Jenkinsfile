@@ -28,8 +28,8 @@ pipeline {
                 sh '''
                 docker push faizashahid/lbg_python_api:latest
                 docker push faizashahid/lbg_python_api:v${BUILD_NUMBER}
-                docker push faizashahid/nginx:latest
-                docker push faizashahid/nginx:v${BUILD_NUMBER}
+                docker push faizashahid/lbg_nginx:latest
+                docker push faizashahid/lbg_nginx:v${BUILD_NUMBER}
                 '''
            }
         }
