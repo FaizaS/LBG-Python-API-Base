@@ -5,7 +5,7 @@ set -e
 
 # Define Docker image name
 DOCKER_IMAGE1="lbg_python_api"
-DOCKER_IMAGE2="lbg_nginx"
+DOCKER_IMAGE2="nginx"
 # cleanup() {
 #     echo "Cleaning up previous build artifacts..."
 #     sleep 3
