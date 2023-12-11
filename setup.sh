@@ -5,7 +5,7 @@ set -e
 
 # Define Docker image name
 DOCKER_IMAGE1="lbg_python_api"
-DOCKER_IMAGE2="nginx"
+DOCKER_IMAGE2="my-nginx"
 # cleanup() {
 #     echo "Cleaning up previous build artifacts..."
 #     sleep 3
@@ -21,8 +21,8 @@ DOCKER_IMAGE2="nginx"
 build_docker() {
     echo "Building the Docker image..."
     sleep 3
-    docker build -t faizashahid/$DOCKER_IMAGE1:latest -t faizashahid/$DOCKER_IMAGE1:v${BUILD_NUMBER} .
-    docker build -t faizashahid/nginx:latest -t faizashahid/nginx:v${BUILD_NUMBER} ./nginx
+    docker build -t faizashahid/$DOCKER_IMAGE1 -t faizashahid/$DOCKER_IMAGE1:v${BUILD_NUMBER} .
+    docker build -t faizashahid/$DOCKER_IMAGE2 -t faizashahid/$DOCKER_IMAGE2:v${BUILD_NUMBER} ./nginx
 }
 
 #push_docker () {

@@ -7,13 +7,20 @@ pipeline {
                 ssh -i ~/.ssh/id_rsa jenkins@10.154.0.36 << EOF
 
                 docker stop flask-app || echo "flask-app is not running"
+                docker rm flask-app 
+
+
                 docker stop nginx || echo "nginx is not running"
-                docker rm -f faizashahid/nginx
-                docker rm -f faizashahid/lbg_python_api
+                docker rm nginx
+
+                docker rmi faizashahid/lbg_python_api || echo "Image does not exist"
+                docker rmi faizashahid/my-nginx || echo "Image does not exist"
+
+                // docker rm -f 
                 // docker rm -f $(docker ps -aq) || true
                 // docker rmi -f $(docker images) || true
+
                 docker network create project-network || true
-                echo "Cleanup done."
                 '''
            }
         }
@@ -30,8 +37,8 @@ pipeline {
                 sh '''
                 docker push faizashahid/lbg_python_api
                 docker push faizashahid/lbg_python_api:v${BUILD_NUMBER}
-                docker push faizashahid/nginx
-                docker push faizashahid/nginx:v${BUILD_NUMBER}
+                docker push faizashahid/my-nginx
+                docker push faizashahid/my-nginx:v${BUILD_NUMBER}
                 '''
            }
         }
@@ -41,10 +48,20 @@ pipeline {
                 sh '''
                 ssh -i ~/.ssh/id_rsa jenkins@10.154.0.36 << EOF
                 // docker run -d -p 80:5001 -e PORT=5001 --name flask-app faizashahid/lbg_python_api:latest
-                docker run -d --name lbg_python_api faizashahid/lbg_python_api
-                docker run -d -p 80:80 --name nginx --network project-network faizashahid/nginx
+
+                docker run -d --name flask-app --network project-network faizashahid/lbg_python_api
+                docker run -d -p 80:80 --name nginx --network project-network faizashahid/my-nginx
                 '''
            }
         }
+
+        stage('Cleanup') {
+            steps {
+                sh '''
+                docker system prune -f 
+                docker rmi faizashahid/lbg_python_api:v${BUILD_NUMBER}
+                docker rmi faizashahid/my-nginx:v${BUILD_NUMBER}
+                '''
+           }
     }
 }
