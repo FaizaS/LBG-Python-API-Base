@@ -18,7 +18,6 @@ pipeline {
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        // docker build -t eu.gcr.io/lbg-mea-14/piers-flask-demo:latest -t eu.gcr.io/lbg-mea-14/piers-flask-demo:v$BUILD_NUMBER .
                         ssh -i ~/.ssh/id_rsa jenkins@10.154.15.192 << EOF
                         docker stop flask-app || echo "flask-app is not running"
                         docker rm flask-app 
@@ -46,7 +45,6 @@ pipeline {
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        // docker build -t eu.gcr.io/lbg-mea-14/piers-flask-demo:latest -t eu.gcr.io/lbg-mea-14/piers-flask-demo:v$BUILD_NUMBER .
                         docker build -t faizashahid/lbg_python_api -t faizashahid/lbg_python_api:v${BUILD_NUMBER} .
                         docker build -t faizashahid/my-nginx -t faizashahid/my-nginx:v${BUILD_NUMBER} ./nginx
                         '''
