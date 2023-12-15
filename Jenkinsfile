@@ -98,7 +98,7 @@ pipeline {
                     }
                 }
                 sh '''
-                docker rmi faizashahid/project-flask-api:latest
+                docker rmi gcr.io/lbg-mea-16/faiza-project-flask-api:latest
                 docker system prune -f 
                 '''
             }
