@@ -25,11 +25,11 @@ pipeline {
                 script {
 			        if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        docker build -t faizashahid/project-flask-api -t faizashahid/project-flask-api:prod-v${BUILD_NUMBER} .
+                        docker build -t gcr.io/lbg-mea-16/faiza-project-flask-api -t gcr.io/lbg-mea-16/faiza-project-flask-api:prod-v${BUILD_NUMBER} .
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        docker build -t faizashahid/project-flask-api -t faizashahid/project-flask-api:dev-v${BUILD_NUMBER} .
+                        docker build -t gcr.io/lbg-mea-16/faiza-project-flask-api -t gcr.io/lbg-mea-16/faiza-project-flask-api:dev-v${BUILD_NUMBER} .
                         '''
                     } else {
                         sh '''
@@ -45,13 +45,13 @@ pipeline {
                 script {
 			        if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        docker push faizashahid/project-flask-api
-                        docker push faizashahid/project-flask-api:prod-v${BUILD_NUMBER}
+                        docker push gcr.io/lbg-mea-16/faiza-project-flask-api
+                        docker push gcr.io/lbg-mea-16/faiza-project-flask-api:prod-v${BUILD_NUMBER}
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''                        
-                        docker push faizashahid/project-flask-api
-                        docker push faizashahid/project-flask-api:dev-v${BUILD_NUMBER}
+                        docker push gcr.io/lbg-mea-16/faiza-project-flask-api
+                        docker push gcr.io/lbg-mea-16/faiza-project-flask-api:dev-v${BUILD_NUMBER}
                         '''
                     } else {
                         sh '''
@@ -68,12 +68,12 @@ pipeline {
 			        if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
                         kubectl apply -n prod -f ./kubernetes
-                        kubectl set image deployment/flask-api-deployment flask-container=faizashahid/project-flask-api:prod-v${BUILD_NUMBER} -n prod
+                        kubectl set image deployment/flask-api-deployment flask-container=gcr.io/lbg-mea-16/faiza-project-flask-api:prod-v${BUILD_NUMBER} -n prod
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
                         kubectl apply -n dev -f ./kubernetes
-                        kubectl set image deployment/flask-api-deployment flask-container=faizashahid/project-flask-api:dev-v${BUILD_NUMBER} -n dev
+                        kubectl set image deployment/flask-api-deployment flask-container=gcr.io/lbg-mea-16/faiza-project-flask-api:dev-v${BUILD_NUMBER} -n dev
                         '''
                     } else {
                         sh '''
@@ -89,11 +89,11 @@ pipeline {
                 script{
                     if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        docker rmi faizashahid/project-flask-api:prod-v${BUILD_NUMBER}
+                        docker rmi gcr.io/lbg-mea-16/faiza-project-flask-api:prod-v${BUILD_NUMBER}
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        docker rmi faizashahid/project-flask-api:dev-v${BUILD_NUMBER}
+                        docker rmi gcr.io/lbg-mea-16/faiza-project-flask-api:dev-v${BUILD_NUMBER}
                         '''
                     }
                 }
