@@ -6,26 +6,11 @@ pipeline {
                 script {
 			        if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        ssh -i ~/.ssh/id_rsa jenkins@10.154.0.36 << EOF
-                        docker stop flask-app || echo "flask-app is not running"
-                        docker rm flask-app 
-                        docker stop nginx || echo "nginx is not running"
-                        docker rm nginx
-                        docker rmi faizashahid/lbg_python_api || echo "Image does not exist"
-                        docker rmi faizashahid/my-nginx || echo "Image does not exist"
-
-                        docker network create project || true
+                        kubectl create ns prod || echo "Prod Namespace Already Exists"
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        ssh -i ~/.ssh/id_rsa jenkins@10.154.15.192 << EOF
-                        docker stop flask-app || echo "flask-app is not running"
-                        docker rm flask-app 
-                        docker stop nginx || echo "nginx is not running"
-                        docker rm nginx
-                        docker rmi faizashahid/lbg_python_api || echo "Image does not exist"
-                        docker rmi faizashahid/my-nginx || echo "Image does not exist"
-                        docker network create project || true
+                        kubectl create ns dev || echo "Dev Namespace Already Exists"
                         '''
                     } else {
                         sh '''
@@ -40,12 +25,11 @@ pipeline {
                 script {
 			        if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        echo "Build not required in main"
+                        docker build -t faizashahid/project-flask-api -t faizashahid/project-flask-api:prod-v${BUILD_NUMBER} .
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        docker build -t faizashahid/lbg_python_api -t faizashahid/lbg_python_api:v${BUILD_NUMBER} .
-                        docker build -t faizashahid/my-nginx -t faizashahid/my-nginx:v${BUILD_NUMBER} ./nginx
+                        docker build -t faizashahid/project-flask-api -t faizashahid/project-flask-api:dev-v${BUILD_NUMBER} .
                         '''
                     } else {
                         sh '''
@@ -61,14 +45,13 @@ pipeline {
                 script {
 			        if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        echo "Push not required in main"
+                        docker push faizashahid/project-flask-api
+                        docker push faizashahid/project-flask-api:prod-v${BUILD_NUMBER}
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''                        
-                        docker push faizashahid/lbg_python_api
-                        docker push faizashahid/lbg_python_api:v${BUILD_NUMBER}
-                        docker push faizashahid/my-nginx
-                        docker push faizashahid/my-nginx:v${BUILD_NUMBER}
+                        docker push faizashahid/project-flask-api
+                        docker push faizashahid/project-flask-api:dev-v${BUILD_NUMBER}
                         '''
                     } else {
                         sh '''
@@ -84,15 +67,13 @@ pipeline {
                 script {
 			        if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        ssh -i ~/.ssh/id_rsa jenkins@10.154.0.36 << EOF
-                        docker run -d --name flask-app --network project faizashahid/lbg_python_api
-                        docker run -d -p 80:80 --name nginx --network project faizashahid/my-nginx
+                        kubectl apply -n prod -f ./kubernetes
+                        kubectl set image deployment/flask-api-deployment flask-container=faizashahid/project-flask-api:prod-v${BUILD_NUMBER} -n prod
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        ssh -i ~/.ssh/id_rsa jenkins@10.154.15.192 << EOF
-                        docker run -d --name flask-app --network project faizashahid/lbg_python_api
-                        docker run -d -p 80:80 --name nginx --network project faizashahid/my-nginx
+                        kubectl apply -n dev -f ./kubernetes
+                        kubectl set image deployment/flask-api-deployment flask-container=faizashahid/project-flask-api:dev-v${BUILD_NUMBER} -n dev
                         '''
                     } else {
                         sh '''
@@ -106,14 +87,18 @@ pipeline {
         stage('Cleanup') {
             steps {
                 script{
-                    if (env.GIT_BRANCH == 'origin/dev') {
+                    if (env.GIT_BRANCH == 'origin/main') {
                         sh '''
-                        docker rmi faizashahid/lbg_python_api:v${BUILD_NUMBER}
-                        docker rmi faizashahid/my-nginx:v${BUILD_NUMBER}
+                        docker rmi faizashahid/project-flask-api:prod-v${BUILD_NUMBER}
+                        '''
+                    } else if (env.GIT_BRANCH == 'origin/dev') {
+                        sh '''
+                        docker rmi faizashahid/project-flask-api:dev-v${BUILD_NUMBER}
                         '''
                     }
                 }
                 sh '''
+                docker rmi faizashahid/project-flask-api:latest
                 docker system prune -f 
                 '''
             }
