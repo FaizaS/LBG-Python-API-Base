@@ -20,7 +20,7 @@ spec:
     spec:
       containers:
       - name: flask-container
-        image: faizashahid/project-flask-api:latest
+        image: gcr.io/lbg-mea-16/faiza-project-flask-api:latest
         imagePullPolicy: Always
         ports: 
         - containerPort: 8080
