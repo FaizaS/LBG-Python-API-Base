@@ -34,6 +34,10 @@ spec:
       labels:
         app: nginx
     spec:
+      volumes:
+      - name: nginx-volume
+        configMap:
+          name: nginx-config
       containers:
       - name: nginx
         image: nginx:latest
