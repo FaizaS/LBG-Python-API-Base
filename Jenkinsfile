@@ -72,7 +72,7 @@ pipeline {
                         '''
                     } else if (env.GIT_BRANCH == 'origin/dev') {
                         sh '''
-                        kubectl apply -n prod -f ./kubernetes
+                        kubectl apply -n dev -f ./kubernetes
                         kubectl set image deployment/flask-api-deployment flast-container=faizashahid/project-flask-api:dev-v${BUILD_NUMBER} -n dev
                         '''
                     } else {
@@ -98,6 +98,7 @@ pipeline {
                     }
                 }
                 sh '''
+                docker rmi faizashahid/project-flask-api:latest
                 docker system prune -f 
                 '''
             }
